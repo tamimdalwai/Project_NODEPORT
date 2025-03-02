@@ -4,6 +4,12 @@
     --background-color: #ecf0f1;
 }
 
+#header{
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;

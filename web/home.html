@@ -1,4 +1,3 @@
-<!-- web/home.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,213 +6,43 @@
 </head>
 <body>
     <div class="container">
+        <h1>PLC Monitor</h1>
         <div class="control-group">
-            <select id="plcSelect" class="form-control" onclick="loadPlcList()">
+            <select id="plcSelect" onfocus="loadPlcList()">
                 <option value="">Select PLC</option>
             </select>
-            <button class="btn" onclick="handleShow()">Show</button>
-        </div>
-
-        <div class="status-bar">
-            <div>Sampling Frequency: <span id="samplingFreq">N/A</span> ms</div>
-            <div>Change in Data: <span id="changeData">N/A</span>%</div>
-        </div>
-
-        <div class="scrollable-table">
-            <table id="plcTable">
-                <thead>
-                    <tr>
-                        <th>PLC OUTPUT NO</th>
-                        <th>MODBUS ADDRESS (Coils)</th>
-                        <th>States (Coils)</th>
-                        <th>INPUT BIT NO</th>
-                        <th>MODBUS ADDRESS (Input Bits)</th>
-                        <th>States (Input Bits)</th>
-                        <th>PLC ANALOG INPUT SLOT</th>
-                        <th>MODBUS ADDRESS (Analog Inputs)</th>
-                        <th>Values</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+            <button onclick="handleShow()">Show</button>
         </div>
     </div>
 
     <script>
+        async function loadPlcList() {
+            const plcs = await window.pywebview.api.get_plc_list();
+            const select = document.getElementById('plcSelect');
+            plcs.forEach(plc => {
+                const option = document.createElement('option');
+                option.value = plc;
+                option.textContent = plc;
+                select.appendChild(option);
+            });
+        }
 
-    async function loadPlcList(){
-        const plcList = await window.pywebview.api.get_plc_list();
-        const select = document.getElementById('plcSelect');
-        plcList.sort((a,b)=>{
-            let numA = parseInt(a.replace("PLC",""))
-            let numB = parseInt(b.replace("PLC",""))
-            return numA - numB;
-        });
-        plcList.forEach(plc => {
-            const option = document.createElement('option');
-            option.value = plc;
-            option.textContent = plc;
-            select.appendChild(option);
-        });
+        async function handleShow() {
+            const plcName = document.getElementById('plcSelect').value;
+            if (!plcName) return;
 
-    }
+            // Start Modbus connection
+            await window.pywebview.api.start_modbus(plcName, '127.0.0.1');
 
-    async function handleShow() {
-    const plcSelect = document.getElementById('plcSelect');
-    const plcName = plcSelect.value;
+            // Open monitoring window
+            window.pywebview.api.create_plc_window(plcName);
+        }
 
-    if (!plcName) {
-        alert('Please select a PLC');
-        return;
-    }
-
-    try {
-        console.log("Fetching data for PLC:", plcName);  // Debug
-        const data = await window.pywebview.api.get_plc_data(plcName);
-        console.log("Received data:", data);  // Debug
-
-        // Update status
-        document.getElementById('samplingFreq').textContent =
-            data.sampling_frequency || 'N/A';
-        document.getElementById('changeData').textContent =
-            data.change_in_data || 'N/A';
-
-        // Update table
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-
-        data.register_data.forEach(row => {
-            console.log("Processing row:", row);  // Debug
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${row['PLC OUTPUT NO'] || ''}</td>
-                <td>${row['MODBUS ADDRESS (Coils)'] || ''}</td>
-                <td>${row['States (Coils)'] || ''}</td>
-                <td>${row['INPUT BIT NO'] || ''}</td>
-                <td>${row['MODBUS ADDRESS (Input Bits)'] || ''}</td>
-                <td>${row['States (Input Bits)'] || ''}</td>
-                <td>${row['PLC ANALOG INPUT SLOT'] || ''}</td>
-                <td>${row['MODBUS ADDRESS (Analog Inputs)'] || ''}</td>
-                <td>${row['Values'] || ''}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error loading PLC data');
-    }
-}
+        window.addEventListener('pywebviewready', function() {
+    window.pywebview.api.on_closed(function() {
+        window.pywebview.api.cleanup();
+    });
+});
     </script>
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-<!--    <title>PLC Monitor</title>-->
-<!--    <link rel="stylesheet" href="style.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--    <div class="container">-->
-<!--        <div class="control-group">-->
-<!--            <select id="plcSelect" class="form-control">-->
-<!--                <option value="">Select PLC</option>-->
-<!--                &lt;!&ndash; PLC options will be dynamically loaded here &ndash;&gt;-->
-<!--            </select>-->
-<!--            <button class="btn" onclick="handleShow()">Show</button>-->
-<!--        </div>-->
-
-<!--        <div class="status-bar">-->
-<!--            <div>Sampling Frequency: <span id="samplingFreq">N/A</span> ms</div>-->
-<!--            <div>Change in Data: <span id="changeData">N/A</span>%</div>-->
-<!--        </div>-->
-
-<!--        <div class="scrollable-table">-->
-<!--            <table id="plcTable">-->
-<!--                <thead>-->
-<!--                    <tr>-->
-<!--                        <th>PLC OUTPUT NO</th>-->
-<!--                        <th>MODBUS ADDRESS (Coils)</th>-->
-<!--                        <th>States (Coils)</th>-->
-<!--                        <th>INPUT BIT NO</th>-->
-<!--                        <th>MODBUS ADDRESS (Input Bits)</th>-->
-<!--                        <th>States (Input Bits)</th>-->
-<!--                        <th>PLC ANALOG INPUT SLOT</th>-->
-<!--                        <th>MODBUS ADDRESS (Analog Inputs)</th>-->
-<!--                        <th>Values</th>-->
-<!--                    </tr>-->
-<!--                </thead>-->
-<!--                <tbody id="tableBody"></tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    <script>-->
-<!--    document.addEventListener('DOMContentLoaded', async () => {-->
-<!--        // Load PLC list-->
-<!--        try {-->
-<!--            const plcList = await window.pywebview.api.get_plc_list();-->
-<!--            const select = document.getElementById('plcSelect');-->
-
-<!--            plcList.forEach(plc => {-->
-<!--                const option = document.createElement('option');-->
-<!--                option.value = plc;-->
-<!--                option.textContent = plc;-->
-<!--                select.appendChild(option);-->
-<!--            });-->
-<!--        } catch (error) {-->
-<!--            console.error('Error loading PLC list:', error);-->
-<!--            alert('Error loading PLC list');-->
-<!--        }-->
-<!--    });-->
-
-<!--    async function handleShow() {-->
-<!--        const plcSelect = document.getElementById('plcSelect');-->
-<!--        const plcName = plcSelect.value;-->
-
-<!--        if (!plcName) {-->
-<!--            alert('Please select a PLC');-->
-<!--            return;-->
-<!--        }-->
-
-<!--        try {-->
-<!--            console.log("Fetching data for PLC:", plcName);  // Debug-->
-<!--            const data = await window.pywebview.api.get_plc_data(plcName);-->
-<!--            console.log("Received data:", data);  // Debug-->
-
-<!--            // Update status-->
-<!--            document.getElementById('samplingFreq').textContent =-->
-<!--                data.sampling_frequency || 'N/A';-->
-<!--            document.getElementById('changeData').textContent =-->
-<!--                data.change_in_data || 'N/A';-->
-
-<!--            // Update table-->
-<!--            const tbody = document.getElementById('tableBody');-->
-<!--            tbody.innerHTML = '';-->
-
-<!--            data.register_data.forEach(row => {-->
-<!--                console.log("Processing row:", row);  // Debug-->
-<!--                const tr = document.createElement('tr');-->
-<!--                tr.innerHTML = `-->
-<!--                    <td>${row['PLC OUTPUT NO'] || ''}</td>-->
-<!--                    <td>${row['MODBUS ADDRESS (Coils)'] || ''}</td>-->
-<!--                    <td>${row['States (Coils)'] || ''}</td>-->
-<!--                    <td>${row['INPUT BIT NO'] || ''}</td>-->
-<!--                    <td>${row['MODBUS ADDRESS (Input Bits)'] || ''}</td>-->
-<!--                    <td>${row['States (Input Bits)'] || ''}</td>-->
-<!--                    <td>${row['PLC ANALOG INPUT SLOT'] || ''}</td>-->
-<!--                    <td>${row['MODBUS ADDRESS (Analog Inputs)'] || ''}</td>-->
-<!--                    <td>${row['Values'] || ''}</td>-->
-<!--                `;-->
-<!--                tbody.appendChild(tr);-->
-<!--            });-->
-
-<!--        } catch (error) {-->
-<!--            console.error('Error:', error);-->
-<!--            alert('Error loading PLC data');-->
-<!--        }-->
-<!--    }-->
-<!--    </script>-->
-<!--</body>-->
-<!--</html>-->

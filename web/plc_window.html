@@ -16,13 +16,10 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Output</th>
                         <th>Coil Address</th>
                         <th>Coil State</th>
-                        <th>Input Bit</th>
                         <th>Input Address</th>
                         <th>Input State</th>
-                        <th>Analog Slot</th>
                         <th>Register Address</th>
                         <th>Value</th>
                     </tr>
@@ -38,26 +35,54 @@
 
         async function refreshData() {
             const data = await window.pywebview.api.get_plc_data(plcName);
-            updateTable(data.registers);
-            document.getElementById('sampling').textContent = data.config.Sampling_Frequency || 'N/A';
-            document.getElementById('threshold').textContent = data.config.Change_Threshold || 'N/A';
+            updateTable(data);
         }
 
-        function updateTable(registers) {
+        function updateTable(data) {
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = registers.map(reg => `
-                <tr>
-                    <td>${reg['PLC OUTPUT NO'] || ''}</td>
-                    <td>${reg['MODBUS ADDRESS (Coils)'] || ''}</td>
-                    <td>${reg['States (Coils)']}</td>
-                    <td>${reg['INPUT BIT NO'] || ''}</td>
-                    <td>${reg['MODBUS ADDRESS (Input Bits)'] || ''}</td>
-                    <td>${reg['States (Input Bits)']}</td>
-                    <td>${reg['PLC ANALOG INPUT SLOT'] || ''}</td>
-                    <td>${reg['MODBUS ADDRESS (Analog Inputs)'] || ''}</td>
-                    <td>${reg.Values}</td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = '';
+
+            // Display coil states
+            for (const [address, state] of Object.entries(data.coil_states)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${address}</td>
+                    <td>${state}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                `;
+                tbody.appendChild(row);
+            }
+
+            // Display input status states
+            for (const [address, state] of Object.entries(data.input_status_states)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td>${address}</td>
+                    <td>${state}</td>
+                    <td></td>
+                    <td></td>
+                `;
+                tbody.appendChild(row);
+            }
+
+            // Display input register states
+            for (const [address, value] of Object.entries(data.input_register_states)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>${address}</td>
+                    <td>${value}</td>
+                `;
+                tbody.appendChild(row);
+            }
         }
 
         // Auto-refresh every second
@@ -65,10 +90,10 @@
         refreshData();
 
         window.addEventListener('pywebviewready', function() {
-    window.pywebview.api.on_closed(function() {
-        window.pywebview.api.cleanup();
-    });
-});
+            window.pywebview.api.on_closed(function() {
+                window.pywebview.api.cleanup();
+            });
+        });
     </script>
 </body>
 </html>

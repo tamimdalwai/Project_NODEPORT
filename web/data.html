@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js"></script>
+</head>
+<body>
+    <div class="scrollable-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Output</th>
+                    <th>Coil Address</th>
+                    <th>Coil State</th>
+                    <th>Input Bit</th>
+                    <th>Input Address</th>
+                    <th>Input State</th>
+                    <th>Analog Slot</th>
+                    <th>Register Address</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function updateTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            // Combine all data sources
+            const maxRows = Math.max(
+                Object.keys(data.coils).length,
+                Object.keys(data.input_bits).length,
+                Object.keys(data.registers).length
+            );
+
+            for(let i = 0; i < maxRows; i++) {
+                const row = document.createElement('tr');
+
+                // Coil Data
+                const coilAddr = Object.keys(data.coils)[i] || '';
+                const coilState = coilAddr ? data.coils[coilAddr] : '';
+                row.innerHTML += `<td>Output ${i+1}</td>
+                                 <td>${coilAddr}</td>
+                                 <td>${coilState}</td>`;
+
+                // Input Bit Data
+                const inputBitAddr = Object.keys(data.input_bits)[i] || '';
+                const inputBitState = inputBitAddr ? data.input_bits[inputBitAddr] : '';
+                row.innerHTML += `<td>Input ${i+1}</td>
+                                 <td>${inputBitAddr}</td>
+                                 <td>${inputBitState}</td>`;
+
+                // Register Data
+                const regAddr = Object.keys(data.registers)[i] || '';
+                const regValue = regAddr ? data.registers[regAddr] : '';
+                row.innerHTML += `<td>Analog ${i+1}</td>
+                                 <td>${regAddr}</td>
+                                 <td>${regValue}</td>`;
+
+                tbody.appendChild(row);
+            }
+        }
+
+        // Update data every second
+        async function pollData() {
+            const data = await pywebview.api.get_plc_data();
+            updateTable(data);
+            setTimeout(pollData, 1000);
+        }
+
+        // Start polling when window loads
+        window.onload = pollData;
+    </script>
+</body>
+</html>

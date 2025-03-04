@@ -1,0 +1,406 @@
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --success-color: #27ae60;
+  --danger-color: #e74c3c;
+  --text-color: #333;
+  --border-color: #ecf0f1;
+  --background-light: #f8f9fa;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Base Styles */
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: #f5f6fa;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  overflow: hidden;
+}
+
+/* Form Elements */
+.control-group {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--background-light);
+  border-bottom: 1px solid var(--border-color);
+}
+
+select {
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  min-width: 240px;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+select:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+
+button:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* Table Styles */
+.scrollable-table {
+  max-height: 75vh;
+  overflow: auto;
+  margin: 0;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.data-table th {
+  background: var(--primary-color);
+  color: white;
+  padding: 1rem;
+  font-weight: 600;
+  text-align: left;
+  position: sticky;
+  top: 0;
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.data-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Status Indicators */
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.status.ON {
+  background: #e8f5e9;
+  color: var(--success-color);
+}
+
+.status.OFF {
+  background: #ffebee;
+  color: var(--danger-color);
+}
+
+/* Loading and Error States */
+.loading,
+.error {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.loading {
+  color: #7f8c8d;
+}
+
+.error {
+  color: var(--danger-color);
+  background: #ffebee;
+  border-radius: 8px;
+  margin: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    border-radius: 8px;
+  }
+
+  .control-group {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  .data-table {
+    font-size: 0.9rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 0.75rem;
+  }
+}
+
+/* Visual Enhancements */
+#plc-name {
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: var(--background-light);
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  padding-left: 1.5rem;
+}
+
+
+
+
+
+
+/*!* Combine all CSS from previous inline styles *!*/
+/*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*    padding: 20px;*/
+/*    background-color: #f5f5f5;*/
+/*}*/
+
+/*.container {*/
+/*    background: white;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+/*.scrollable-table {*/
+/*    max-height: 80vh;*/
+/*    overflow: auto;*/
+/*    margin: 20px;*/
+/*}*/
+
+/*!* Add all other CSS rules from the original HTML strings *!*/
+/*.scrollable-table {*/
+/*    max-height: 80vh;*/
+/*    overflow: auto;*/
+/*    margin: 20px;*/
+/*}*/
+
+/*table {*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*    background: white;*/
+/*}*/
+
+/*th, td {*/
+/*    border: 1px solid #ddd;*/
+/*    padding: 12px;*/
+/*    text-align: left;*/
+/*    min-width: 120px;*/
+/*}*/
+
+/*th {*/
+/*    background-color: #4CAF50;*/
+/*    color: white;*/
+/*    position: sticky;*/
+/*    top: 0;*/
+/*}*/
+
+/*tr:nth-child(even) {*/
+/*    background-color: #f2f2f2;*/
+/*}*/
+
+/*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*    padding: 20px;*/
+/*    background-color: #f5f5f5;*/
+/*}*/
+
+/*.container {*/
+/*    background: white;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+/*select {*/
+/*    padding: 10px;*/
+/*    margin: 10px 0;*/
+/*    width: 200px;*/
+/*}*/
+
+/*button {*/
+/*    padding: 10px 20px;*/
+/*    background-color: #4CAF50;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*}*/
+/*.container {*/
+/*    max-width: 800px;*/
+/*    margin: 2rem auto;*/
+/*    padding: 20px;*/
+/*    font-family: Arial, sans-serif;*/
+/*}*/
+
+/*.control-group {*/
+/*    display: flex;*/
+/*    gap: 10px;*/
+/*    margin: 20px 0;*/
+/*}*/
+
+/*select {*/
+/*    padding: 8px;*/
+/*    min-width: 200px;*/
+/*}*/
+
+/*button {*/
+/*    padding: 8px 16px;*/
+/*    background: #007bff;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*button:hover {*/
+/*    background: #0056b3;*/
+/*}*/
+/*.data-table {*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*    margin: 20px 0;*/
+/*    box-shadow: 0 1px 3px rgba(0,0,0,0.1);*/
+/*}*/
+
+/*.data-table th, .data-table td {*/
+/*    padding: 12px 15px;*/
+/*    text-align: left;*/
+/*    border-bottom: 1px solid #ddd;*/
+/*}*/
+
+/*.data-table th {*/
+/*    background-color: #f8f9fa;*/
+/*    font-weight: 600;*/
+/*    color: #2c3e50;*/
+/*}*/
+
+/*.data-table tr:hover {*/
+/*    background-color: #f5f5f5;*/
+/*}*/
+/*.scrollable-table {*/
+/*    max-height: 80vh;*/
+/*    overflow: auto;*/
+/*    margin: 20px 0;*/
+/*    border: 1px solid #ddd;*/
+/*    border-radius: 4px;*/
+/*}*/
+
+/*#data-body tr:hover {*/
+/*    background-color: #f5f5f5;*/
+/*}*/
+
+/*#data-body td {*/
+/*    padding: 12px 15px;*/
+/*    border-bottom: 1px solid #ddd;*/
+/*}*/
+/*.status-message {*/
+/*    margin: 10px 0;*/
+/*    padding: 8px;*/
+/*    border-radius: 4px;*/
+/*}*/
+
+/*#refreshBtn {*/
+/*    margin-left: 10px;*/
+/*    background-color: #6c757d;*/
+/*}*/
+
+/*#refreshBtn:hover {*/
+/*    background-color: #5a6268;*/
+/*}*/
+/*!* Add to static/styles.css *!*/
+/*.status {*/
+/*    font-weight: bold;*/
+/*    padding: 4px 8px;*/
+/*    border-radius: 4px;*/
+/*    text-align: center;*/
+/*    display: inline-block;*/
+/*    min-width: 60px;*/
+/*}*/
+
+/*.status.ON {*/
+/*    background-color: #4CAF50;*/
+/*    color: white;*/
+/*}*/
+
+/*.status.OFF {*/
+/*    background-color: #f44336;*/
+/*    color: white;*/
+/*}*/
+
+/*.loading {*/
+/*    text-align: center;*/
+/*    color: #666;*/
+/*    font-style: italic;*/
+/*    padding: 20px !important;*/
+/*}*/
+
+/*.error {*/
+/*    color: #dc3545;*/
+/*    font-weight: bold;*/
+/*    text-align: center;*/
+/*    padding: 20px !important;*/
+/*}*/
+
+/*.data-table td {*/
+/*    vertical-align: middle;*/
+/*    padding: 12px 15px !important;*/
+/*}*/
+/*!* static/styles.css *!*/
+/*.scrollable-table {*/
+/*    max-height: 70vh;*/
+/*    overflow: auto;*/
+/*    margin: 20px 0;*/
+/*}*/
+
+/*.data-table {*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*}*/
+
+/*.data-table th, .data-table td {*/
+/*    border: 1px solid #ddd;*/
+/*    padding: 8px;*/
+/*    text-align: center;*/
+/*}*/
+
+/*.data-table th {*/
+/*    background-color: #f4f4f4;*/
+/*    position: sticky;*/
+/*    top: 0;*/
+/*}*/

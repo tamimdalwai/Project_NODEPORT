@@ -1,12 +1,14 @@
+/* Root Variables for Consistent Styling */
 :root {
   --primary-color: #2c3e50;
   --secondary-color: #3498db;
   --success-color: #27ae60;
   --danger-color: #e74c3c;
   --text-color: #333;
-  --border-color: #ecf0f1;
+  --border-color: #e0e0e0;
   --background-light: #f8f9fa;
-  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
 }
 
 /* Base Styles */
@@ -20,83 +22,122 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1600px;
+  max-height: 800px;
   margin: 2rem auto;
   background: white;
   border-radius: 12px;
   box-shadow: var(--shadow-light);
   overflow: hidden;
+  padding: 20px;
 }
 
-/* Form Elements */
-.control-group {
-  display: flex;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: var(--background-light);
-  border-bottom: 1px solid var(--border-color);
-}
-
+/* Dropdown Menu Styling */
 select {
-  padding: 0.75rem;
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-  min-width: 240px;
-  background: white;
-  transition: border-color 0.2s;
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none; /* Remove default arrow for Safari */
+  -moz-appearance: none; /* Remove default arrow for Firefox */
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem 2.5rem 0.75rem 1rem; /* Add padding for text and custom arrow */
+  font-size: 1em;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  width: 100%; /* Full width */
+  max-width: 300px; /* Limit maximum width */
+}
+
+/* Custom Dropdown Arrow */
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 300px;
+}
+
+.select-wrapper::after {
+  content: '▼'; /* Custom arrow */
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  pointer-events: none; /* Ensure the arrow doesn't interfere with clicking */
+  color: var(--primary-color);
+  font-size: 0.8em;
+}
+
+/* Hover and Focus States */
+select:hover {
+  border-color: var(--secondary-color);
 }
 
 select:focus {
   border-color: var(--secondary-color);
   outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
-button {
-  padding: 0.75rem 1.5rem;
-  background: var(--secondary-color);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.1s, background 0.2s;
+/* Disabled State */
+select:disabled {
+  background-color: var(--background-light);
+  color: #999;
+  cursor: not-allowed;
 }
-
-button:hover {
-  background: #2980b9;
-  transform: translateY(-1px);
-}
-
-/* Table Styles */
+/* Table Container */
 .scrollable-table {
+  display: flex;
+  gap: 1rem;
   max-height: 75vh;
   overflow: auto;
   margin: 0;
 }
 
+/* Table Styles */
 .data-table {
-  width: 100%;
-  border-collapse: collapse;
+  flex: 1;
+  border-collapse: collapse; /* Collapse borders for a cleaner look */
   font-size: 0.95rem;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+}
+
+.data-table thead,
+.data-table tbody {
+  display: table;
+  width: 100%;
+}
+
+.data-table tr {
+  display: table-row;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  white-space: nowrap;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  min-width: 100px;
 }
 
 .data-table th {
   background: var(--primary-color);
   color: white;
-  padding: 1rem;
   font-weight: 600;
-  text-align: left;
   position: sticky;
   top: 0;
-}
-
-.data-table td {
-  padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
-  vertical-align: middle;
+  text-transform: uppercase;
+  font-size: 0.9em;
 }
 
 .data-table tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--background-light);
 }
 
 /* Status Indicators */
@@ -106,6 +147,8 @@ button:hover {
   border-radius: 1rem;
   font-weight: 600;
   font-size: 0.85em;
+  text-align: center;
+  transition: all var(--transition-speed) ease;
 }
 
 .status.ON {
@@ -116,6 +159,11 @@ button:hover {
 .status.OFF {
   background: #ffebee;
   color: var(--danger-color);
+}
+
+/* Center align values */
+.data-table td.value {
+  text-align: center;
 }
 
 /* Loading and Error States */
@@ -149,9 +197,6 @@ button:hover {
     padding: 1rem;
   }
 
-  select {
-    width: 100%;
-  }
 
   .data-table {
     font-size: 0.9rem;
@@ -160,6 +205,10 @@ button:hover {
   .data-table th,
   .data-table td {
     padding: 0.75rem;
+  }
+
+  .scrollable-table {
+    flex-direction: column;
   }
 }
 
@@ -178,229 +227,114 @@ tr:nth-child(even) {
   padding-left: 1.5rem;
 }
 
+/* Additional Enhancements */
+.data-table td {
+  transition: background-color var(--transition-speed) ease;
+}
+
+.data-table td:hover {
+  background-color: #e0f7fa;
+}
+
+button {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease;
+  font-size: 1em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-light);
+}
 
 
 
 
 
-/*!* Combine all CSS from previous inline styles *!*/
-/*body {*/
-/*    font-family: Arial, sans-serif;*/
-/*    padding: 20px;*/
-/*    background-color: #f5f5f5;*/
-/*}*/
+/* Modern Scrollbar */
+.scrollable-table::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-/*.container {*/
-/*    background: white;*/
-/*    padding: 20px;*/
-/*    border-radius: 8px;*/
-/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
-/*}*/
+.scrollable-table::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: 4px;
+}
 
-/*.scrollable-table {*/
-/*    max-height: 80vh;*/
-/*    overflow: auto;*/
-/*    margin: 20px;*/
-/*}*/
+.scrollable-table::-webkit-scrollbar-track {
+  background: var(--background-light);
+}
 
-/*!* Add all other CSS rules from the original HTML strings *!*/
-/*.scrollable-table {*/
-/*    max-height: 80vh;*/
-/*    overflow: auto;*/
-/*    margin: 20px;*/
-/*}*/
+/* Modern Hover Effects */
+.data-table tr:hover td {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+/* Button Styles */
+button {
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease;
+  font-size: 1em;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0 0.5rem; /* Add spacing between buttons */
+}
 
-/*table {*/
-/*    width: 100%;*/
-/*    border-collapse: collapse;*/
-/*    background: white;*/
-/*}*/
+button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-light);
+}
 
-/*th, td {*/
-/*    border: 1px solid #ddd;*/
-/*    padding: 12px;*/
-/*    text-align: left;*/
-/*    min-width: 120px;*/
-/*}*/
+/* Specific Button Styles */
+#settingsButton {
+  background-color: #8e44ad; /* Purple for Settings */
+}
 
-/*th {*/
-/*    background-color: #4CAF50;*/
-/*    color: white;*/
-/*    position: sticky;*/
-/*    top: 0;*/
-/*}*/
+#settingsButton:hover {
+  background-color: #732d91;
+}
 
-/*tr:nth-child(even) {*/
-/*    background-color: #f2f2f2;*/
-/*}*/
+#registerButton {
+  background-color: #27ae60; /* Green for Register */
+}
 
-/*body {*/
-/*    font-family: Arial, sans-serif;*/
-/*    padding: 20px;*/
-/*    background-color: #f5f5f5;*/
-/*}*/
+#registerButton:hover {
+  background-color: #219653;
+}
 
-/*.container {*/
-/*    background: white;*/
-/*    padding: 20px;*/
-/*    border-radius: 8px;*/
-/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
-/*}*/
+/* Control Group Layout */
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Add spacing between elements */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
 
-/*select {*/
-/*    padding: 10px;*/
-/*    margin: 10px 0;*/
-/*    width: 200px;*/
-/*}*/
+/* Responsive Design for Buttons */
+@media (max-width: 768px) {
+  .control-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
-/*button {*/
-/*    padding: 10px 20px;*/
-/*    background-color: #4CAF50;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    border-radius: 4px;*/
-/*    cursor: pointer;*/
-/*}*/
-/*.container {*/
-/*    max-width: 800px;*/
-/*    margin: 2rem auto;*/
-/*    padding: 20px;*/
-/*    font-family: Arial, sans-serif;*/
-/*}*/
+  button {
+    width: 100%; /* Full width on small screens */
+    margin: 0.25rem 0; /* Add vertical spacing */
+  }
+}
 
-/*.control-group {*/
-/*    display: flex;*/
-/*    gap: 10px;*/
-/*    margin: 20px 0;*/
-/*}*/
-
-/*select {*/
-/*    padding: 8px;*/
-/*    min-width: 200px;*/
-/*}*/
-
-/*button {*/
-/*    padding: 8px 16px;*/
-/*    background: #007bff;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    border-radius: 4px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*button:hover {*/
-/*    background: #0056b3;*/
-/*}*/
-/*.data-table {*/
-/*    width: 100%;*/
-/*    border-collapse: collapse;*/
-/*    margin: 20px 0;*/
-/*    box-shadow: 0 1px 3px rgba(0,0,0,0.1);*/
-/*}*/
-
-/*.data-table th, .data-table td {*/
-/*    padding: 12px 15px;*/
-/*    text-align: left;*/
-/*    border-bottom: 1px solid #ddd;*/
-/*}*/
-
-/*.data-table th {*/
-/*    background-color: #f8f9fa;*/
-/*    font-weight: 600;*/
-/*    color: #2c3e50;*/
-/*}*/
-
-/*.data-table tr:hover {*/
-/*    background-color: #f5f5f5;*/
-/*}*/
-/*.scrollable-table {*/
-/*    max-height: 80vh;*/
-/*    overflow: auto;*/
-/*    margin: 20px 0;*/
-/*    border: 1px solid #ddd;*/
-/*    border-radius: 4px;*/
-/*}*/
-
-/*#data-body tr:hover {*/
-/*    background-color: #f5f5f5;*/
-/*}*/
-
-/*#data-body td {*/
-/*    padding: 12px 15px;*/
-/*    border-bottom: 1px solid #ddd;*/
-/*}*/
-/*.status-message {*/
-/*    margin: 10px 0;*/
-/*    padding: 8px;*/
-/*    border-radius: 4px;*/
-/*}*/
-
-/*#refreshBtn {*/
-/*    margin-left: 10px;*/
-/*    background-color: #6c757d;*/
-/*}*/
-
-/*#refreshBtn:hover {*/
-/*    background-color: #5a6268;*/
-/*}*/
-/*!* Add to static/styles.css *!*/
-/*.status {*/
-/*    font-weight: bold;*/
-/*    padding: 4px 8px;*/
-/*    border-radius: 4px;*/
-/*    text-align: center;*/
-/*    display: inline-block;*/
-/*    min-width: 60px;*/
-/*}*/
-
-/*.status.ON {*/
-/*    background-color: #4CAF50;*/
-/*    color: white;*/
-/*}*/
-
-/*.status.OFF {*/
-/*    background-color: #f44336;*/
-/*    color: white;*/
-/*}*/
-
-/*.loading {*/
-/*    text-align: center;*/
-/*    color: #666;*/
-/*    font-style: italic;*/
-/*    padding: 20px !important;*/
-/*}*/
-
-/*.error {*/
-/*    color: #dc3545;*/
-/*    font-weight: bold;*/
-/*    text-align: center;*/
-/*    padding: 20px !important;*/
-/*}*/
-
-/*.data-table td {*/
-/*    vertical-align: middle;*/
-/*    padding: 12px 15px !important;*/
-/*}*/
-/*!* static/styles.css *!*/
-/*.scrollable-table {*/
-/*    max-height: 70vh;*/
-/*    overflow: auto;*/
-/*    margin: 20px 0;*/
-/*}*/
-
-/*.data-table {*/
-/*    width: 100%;*/
-/*    border-collapse: collapse;*/
-/*}*/
-
-/*.data-table th, .data-table td {*/
-/*    border: 1px solid #ddd;*/
-/*    padding: 8px;*/
-/*    text-align: center;*/
-/*}*/
-
-/*.data-table th {*/
-/*    background-color: #f4f4f4;*/
-/*    position: sticky;*/
-/*    top: 0;*/
-/*}*/

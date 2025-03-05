@@ -6,28 +6,50 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>PLC <span id="plc-name"></span> Monitoring</h1>
-        <div class="scrollable-table">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>PLC Output No</th>
-                        <th>MODBUS ADDRESS (Coils)</th>
-                        <th>States (Coils)</th>
-                        <th>INPUT BIT NO</th>
-                        <th>MODBUS ADDRESS (Input Bits)</th>
-                        <th>States (Input Bits)</th>
-                        <th>PLC ANALOG INPUT SLOT</th>
-                        <th>MODBUS ADDRESS (Analog Inputs)</th>
-                        <th>Values</th>
-                    </tr>
-                </thead>
-                <tbody id="data-body"></tbody>
-            </table>
-        </div>
-    </div>
+<div class="container">
+    <h1>PLC <span id="plc-name"></span> Monitoring</h1>
+    <div class="scrollable-table">
+        <table class="data-table data-table-coils">
+            <thead>
+            <tr>
+                <th>PLC Output No</th>
+                <th>MODBUS ADDRESS (Coils)</th>
+                <th>States (Coils)</th>
+            </tr>
+            </thead>
+            <tbody id="data-body-coils"></tbody>
+        </table>
 
-  <script src="/static/main.js"></script>
+        <!-- Input Bits Table -->
+        <table class="data-table data-table-input-states">
+            <thead>
+            <tr>
+                <th>INPUT BIT NO</th>
+                <th>MODBUS ADDRESS (Input Bits)</th>
+                <th>States (Input Bits)</th>
+            </tr>
+            </thead>
+            <tbody id="data-body-input-states"></tbody>
+        </table>
+
+        <!-- Registers Table -->
+        <table class="data-table data-table-registers">
+            <thead>
+            <tr>
+                <th>PLC ANALOG INPUT SLOT</th>
+                <th>MODBUS ADDRESS (Analog Inputs)</th>
+                <th>Values</th>
+            </tr>
+            </thead>
+            <tbody id="data-body-registers"></tbody>
+        </table>
+
+    </div>
+</div>
+
+<script src="/static/main.js"></script>
 </body>
 </html>
+
+
+

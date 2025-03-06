@@ -169,11 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function formatInputBitAddress(address) {
-            return `3${String(address).padStart(4, '0')}`;
+            return `1${String(address).padStart(4, '0')}`;
         }
 
         function formatRegisterAddress(address) {
-            return `4${String(address).padStart(4, '0')}`;
+            return `3${String(address).padStart(4, '0')}`;
         }
 
         // Wait for API to be available before initializing data updates

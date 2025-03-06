@@ -125,8 +125,11 @@ async def check_connection(client, plc_id, retry_interval=5):
 async def append_to_excel(data):
     """Append Modbus data to separate Excel files based on PLC ID and register type."""
     plc_id = data["plc_id"]
-    coil_states = data["coil_states"]
-    input_status_states = data["input_status_states"]
+    # coil_states = data["coil_states"]
+    # input_status_states = data["input_status_states"]
+    # Convert boolean values to integers (1 or 0)
+    coil_states = {k: int(v) for k, v in data["coil_states"].items()}
+    input_status_states = {k: int(v) for k, v in data["input_status_states"].items()}
     input_register_states = data["input_register_states"]
 
     folder_path = os.path.join("modbus_data", plc_id)
@@ -243,33 +246,8 @@ async def modbus_client_loop(plc_id, ip, port, sampling_frequency):
                             coil_task, input_task, register_task
                         )
 
-                        # # Update global data
-                        # latest_modbus_data[plc_id] = {
-                        #     "coil_states": coil_states,
-                        #     "input_status_states": input_states,
-                        #     "input_register_states": register_states
-                        # }
                         # Thread-safe data update
                         with data_lock:
-                            # if(len(input_states) == 0):
-                            #     input_states = {}
-                            #     ip_status = get_input_bits(plc_id)
-                            #     for i in ip_status:
-                            #         j = '1'+ str(i).zfill(4)
-                            #         input_states[j] = 0
-                            # if(len(coil_states) == 0):
-                            #     coil_states = {}
-                            #     ip_coils = get_input_bits(plc_id)
-                            #     for i in ip_coils:
-                            #         j = '0' + str(i).zfill(4)
-                            #         coil_states[j] = 0
-                            # if(len(register_states) == 0):
-                            #     register_states = {}
-                            #     ip_register = get_inputs_register(plc_id)
-                            #     for i in ip_register:
-                            #         j = '3' + str(i).zfill(4)
-                            #         register_states[j] = 0
-
                             latest_modbus_data[plc_id] = {
                                 "coil_states": coil_states ,
                                 "input_status_states": input_states ,

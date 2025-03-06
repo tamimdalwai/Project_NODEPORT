@@ -26,7 +26,6 @@ logging.basicConfig(
 logger = logging.getLogger("ModbusClient")
 logging.getLogger("pymodbus").setLevel(logging.WARNING)
 
-
 # Configuration checks
 if sys.version_info < (3, 8):
     raise RuntimeError("Python 3.8 or newer is required")
@@ -34,8 +33,9 @@ if sys.version_info < (3, 8):
 if sys.platform != 'win32':
     raise RuntimeError("This application requires Windows 10+ with WebView2 runtime")
 
-
 SAVED_ADDRESS_FILE_PATH = "config/saveAddress.xlsx"
+
+
 def get_modbus_addresses_with_check(sheet_name):
     """Read Modbus addresses from Excel sheet."""
     try:
@@ -60,6 +60,8 @@ def get_modbus_addresses_with_check(sheet_name):
         "Input Bits": input_bits,
         "Analog Inputs": analog_inputs
     }
+
+
 # def get_coils(sheet_name):
 #     """Get coil addresses for selected PLC."""
 #     coils = get_modbus_addresses_with_check(sheet_name)["Coils"]
@@ -90,8 +92,6 @@ def get_modbus_addresses_with_check(sheet_name):
 #      return field_data
 
 
-
-
 # Initialize Flask app
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -111,6 +111,7 @@ logging.basicConfig(
 )
 logging.getLogger('pywebview').setLevel(logging.WARNING)
 logging.getLogger('werkzeug').setLevel(logging.WARNING)
+
 
 class PlcClientManager:
     def __init__(self):
@@ -150,6 +151,7 @@ class PlcClientManager:
             pass
         except Exception as e:
             logging.error(f"PLC {plc_config['PLC']} error: {e}")
+
 
 class WebViewBridge:
     def __init__(self, plc_configs, client_manager, loop):
@@ -230,7 +232,7 @@ class WebViewBridge:
             window = webview.create_window(
                 f'PLC {plc_name} Monitoring ({self.window_counter})',
                 url=f'http://localhost:5000/data?plc={plc_name}',  # Ensure correct URL
-                js_api=self,  # Pass the bridge instance to the child window
+                js_api=bridge,  # Pass the bridge instance to the child window
                 width=1200,
                 height=800
             )
@@ -252,6 +254,7 @@ class WebViewBridge:
         except Exception as e:
             logging.error(f"Window creation failed: {e}")
             return False
+
     async def _handle_window_close(self, plc_name):
         if plc_name in self.active_windows:
             del self.active_windows[plc_name]
@@ -298,24 +301,29 @@ class WebViewBridge:
             logging.error(f"Error getting data for {plc_name}: {e}")
             return {}
 
+
 # Flask routes
 @app.route('/')
 def index():
     return send_from_directory('templates', 'home.html')
+
 
 # In main.py
 @app.route('/data')
 def data():
     return send_from_directory('templates', 'data.html')
 
+
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     return send_from_directory('static', filename)
 
-# @app.route('/api/health')
-# def health_check():
-#     with data_lock:
-#         return {'status': 'ok', 'active_plcs': list(global_modbus_data.keys())}
+
+@app.route('/api/health')
+def health_check():
+    with data_lock:
+        return {'status': 'ok', 'active_plcs': list(global_modbus_data.keys())}
+
 
 def load_plc_config():
     plc_config_path = os.path.join('config', 'plc_data.xlsx')
@@ -327,6 +335,7 @@ def load_plc_config():
         logging.error(f"Error loading PLC config: {e}")
         return []
 
+
 async def monitor_global_data():
     while True:
         with data_lock:
@@ -334,6 +343,7 @@ async def monitor_global_data():
             for plc, data in latest_modbus_data.items():
                 global_modbus_data[plc] = data
         await asyncio.sleep(1)
+
 
 async def main(client_manager):
     plc_data = load_plc_config()
@@ -348,8 +358,10 @@ async def main(client_manager):
         monitor_task.cancel()
         await monitor_task
 
+
 def start_flask():
     app.run(host='0.0.0.0', port=5000)
+
 
 if __name__ == "__main__":
     # Initialize async loop
@@ -366,10 +378,12 @@ if __name__ == "__main__":
     flask_thread = threading.Thread(target=start_flask, daemon=True)
     flask_thread.start()
 
+
     # Start async loop in separate thread
     def run_async():
         asyncio.set_event_loop(loop)
         loop.run_until_complete(main(client_manager))
+
 
     modbus_thread = threading.Thread(target=run_async, daemon=True)
     modbus_thread.start()
@@ -392,5 +406,3 @@ if __name__ == "__main__":
     finally:
         loop.call_soon_threadsafe(loop.stop)
         logging.info("Application shutdown complete")
-
-

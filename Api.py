@@ -6,8 +6,8 @@ class Api:
     latest_data = {}  # Class-level variable to store live values
 
     def __init__(self):
-        self.plc_config_path = 'web/plc_data.xlsx'
-        self.save_address_path = 'web/saveAddress.xlsx'
+        self.plc_config_path = 'config/plc_data.xlsx'
+        self.save_address_path = 'config/saveAddress.xlsx'
         self.static_plc_data = {}  # Cache for static config
 
     def get_plc_data(self, plc_name):
